@@ -8,5 +8,5 @@ For start the script, please start the <code>install.bat</code> OR do <code>pip 
 
 <p align="center"> 
   Download<br>
-  <img src="https://profile-counter.glitch.me/cctiktokfreeviews/count.svg" />
+  <img src="https://profile-counter.glitch.me/TikTokFollowers/count.svg" />
 </p>
