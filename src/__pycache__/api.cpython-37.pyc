@@ -1,0 +1,28 @@
+B
+    ”ê`&  ã               @   sx   d dl Z d dlZd dlmZmZmZ edd G dd„ dƒZG dd„ deƒZG d	d
+„ d
+eƒZdd„ Z	dd„ Z
+dd„ ZdS )é    N)ÚForeÚStyleÚinitT)Úconvertc               @   sB   e Zd ZdZdddddddd	d
+ddddddœZdd„ Zdd„ ZdS )Ú
+Gmailnatorzhttps://www.gmailnator.com/zwww.gmailnatFor.comz	^\^Googlez.application/json, text/javascript, */*; q=0.01ZXMLHttpRequestz?0zrMozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36z0application/x-www-form-urlencoded; charset=UTF-8zhttps://www.gmailnator.comzsame-originZcorsÚemptyz!https://www.gmailnator.com/inbox/zen-US,en;q=0.9,Ú1)Ú	authorityz	sec-ch-uaÚacceptzx-requested-withzsec-ch-ua-mobilez
+user-agentzcontent-typeÚoriginzsec-fetch-sitezsec-fetch-modezsec-fetch-destZrefererzaccept-languagezsec-gpcc             C   s   t  ¡ | _|  ¡ | _d S )N)ÚrequestsÚSessionÚsÚ_Gmailnator__get_csrfÚ
+csrf_token)Úself© r   ú<F:\css\Documents\GitHub\Discord-Account-Generator\src\api.pyÚ__init__   s    
+zGmailnator.__init__c             C   s   | j  | j¡}|j d¡}|S )NZcsrf_gmailnator_cookie)r   ÚgetÚBASE_URLÚcookies)r   Úresponser   r   r   r   Z
+__get_csrf   s    zGmailnator.__get_csrfN)Ú__name__Ú
+__module__Ú__qualname__r   ÚHEADERSr   r   r   r   r   r   r      s"   r   c                   s<   e Zd Z‡ fdd„Zdd„ Zdd„ Zdd„ Zd	d
+„ Z‡  ZS )ÚGmailnatorReadc                s    t ƒ  ¡  || _|| _|| _d S )N)Úsuperr   ÚtypeÚemailÚ	raw_email)r   r    r!   Útypes)Ú	__class__r   r   r   $   s    
+zGmailnatorRead.__init__c             C   s6   d}t  || j¡}| ¡ }| dd¡}| dd¡}|S )Nz(^.*?(?=[%|@])[%|@])ú%Ú ú@)ÚreÚsearchr    ÚgroupÚreplace)r   Z	name_onlyÚxZfilter0Zfilter1Zfilter2r   r   r   Z__get_email_name,   s    zGmailnatorRead.__get_email_namec             C   sZ   | j dkrd| j› d| j› }| j dkr<d| j› d| j› }| jj| jd || jd}|S )NÚdotzcsrf_gmailnator_token=z#&action=LoadMailList&Email_address=Úpluszmailbox/mailboxquery)ÚdataÚheaders)r   r   r!   r    r   Úpostr   r   )r   r.   Úrr   r   r   Z__requests_mailbox6   s    
+
+z!GmailnatorRead.__requests_mailboxc          
+   C   sH   |   ¡  ¡ }y|d d }W n& tk
+rB } zd}W d d }~X Y nX |S )Nr   Úcontentr%   )Ú!_GmailnatorRead__requests_mailboxÚjsonÚ	Exception)r   Z
+json_inboxZinbox_contentÚer   r   r   Ú	get_inbox@   s    zGmailnatorRead.get_inboxc             C   sF   |   ¡ }d| j› d|› d|› }| jj| jd || jd}| ¡ d S )Nzcsrf_gmailnator_token=z&action=get_message&message_id=z&email=zmailbox/get_single_message/)r.   r/   r2   )Ú_GmailnatorRead__get_email_namer   r   r0   r   r   r4   )r   Zmsg_idZ
+email_namer.   r1   r   r   r   Úget_single_messageK   s    z!GmailnatorRead.get_single_message)	r   r   r   r   r8   r3   r7   r9   Ú__classcell__r   r   )r#   r   r   #   s
+   
+
+r   c                   s$   e Zd Z‡ fdd„Zdd„ Z‡  ZS )ÚGmailnatorGetc                s   t ƒ  ¡  d S )N)r   r   )r   )r#   r   r   r   U   s    zGmailnatorGet.__init__c             C   s(   | j dddddœ}| jjd|d}|jS )NZGenerateEmailé   é   é   )Zcsrf_gmailnator_tokenÚactionzdata[]zdata[]zdata[]z+https://www.gmailnator.com/index/indexquery)r.   )r   r   r0   Útext)r   Úpayloadr1   r   r   r   Ú	get_emailX   s    zGmailnatorGet.get_email)r   r   r   r   rB   r:   r   r   )r#   r   r;   T   s   r;   c             C   s(   |   dd¡}|  dd¡}|  dd¡}|S )Nr&   z%40Ú.r%   Úcomz.com)r*   )r    Ú
+at_replaceZdot_replaceÚfinalr   r   r   Údfilter_emaile   s    rG   c             C   s   |   dd¡}|  dd¡}|S )Nr&   z%40ú+z%2B)r*   )r    rE   Zplus_replacer   r   r   Úpfilter_emailm   s    rI   c             C   s>   d}x4| D ],}|dkrdS |dkr*|d7 }|dkr
+dS q
+W d S )Nr   rH   r-   rC   r<   r,   r   )r    Zdot_counterÚir   r   r   Úfind_email_typet   s    
+rK   )r   r'   Úcoloramar   r   r   r   r   r;   rG   rI   rK   r   r   r   r   Ú<module>   s   
+1

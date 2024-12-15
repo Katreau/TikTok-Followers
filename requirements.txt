@@ -1,0 +1,6 @@
+winshell
+pypiwin32
+requests
+colorama
+psutil
+pyfiglet
